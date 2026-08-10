@@ -8,33 +8,33 @@
 
 ## Thông Tin Học Viên
 
-| Mục         | Nội dung                                                                                                                                    |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Họ và tên   | Nguyễn Minh Đức                                                                                                                             |
-| Mã học viên | 2A202601438                                                                                                                                 |
+| Mục         | Nội dung                                                             |
+| ----------- | -------------------------------------------------------------------- |
+| Họ và tên   | Nguyễn Minh Đức                                                      |
+| Mã học viên | 2A202601438                                                          |
 | Repo        | https://github.com/MinhDuc-IT/K4-Day12-2A202601438-NguyenMinhDuc.git |
 
 ## Service
 
-| Mục         | Nội dung                                                                                      |
-| ----------- | --------------------------------------------------------------------------------------------- |
+| Mục         | Nội dung                                                             |
+| ----------- | -------------------------------------------------------------------- |
 | Public URL  | https://k4-day12-2a202601438-nguyenminhduc-production.up.railway.app |
-| Platform    | Railway                                                                                       |
-| Ngày deploy | 10/08/2026                                                                                    |
+| Platform    | Railway                                                              |
+| Ngày deploy | 10/08/2026                                                           |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
 Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 
-| Biến                | Đã set | Ghi chú                                                      |
-| ------------------- | ------ | ------------------------------------------------------------ |
-| `PORT`              | ✅      | Railway tự gán khi container khởi động                      |
-| `API_TOKEN`         | ✅      | Đặt thủ công trong Railway dashboard → Variables             |
-| `REDIS_URL`         | ✅      | Railway Redis add-on, reference `${{Redis.REDIS_URL}}`       |
-| `BUCKET_CAPACITY`   | ✅      | 10                                                           |
-| `REFILL_PER_MINUTE` | ✅      | 10                                                           |
-| `DAILY_BUDGET_USD`  | ✅      | 1.0                                                          |
-| `LOG_LEVEL`         | ✅      | INFO                                                         |
+| Biến                | Đã set | Ghi chú                                                |
+| ------------------- | ------ | ------------------------------------------------------ |
+| `PORT`              | ✅     | Railway tự gán khi container khởi động                 |
+| `API_TOKEN`         | ✅     | Đặt thủ công trong Railway dashboard → Variables       |
+| `REDIS_URL`         | ✅     | Railway Redis add-on, reference `${{Redis.REDIS_URL}}` |
+| `BUCKET_CAPACITY`   | ✅     | 10                                                     |
+| `REFILL_PER_MINUTE` | ✅     | 10                                                     |
+| `DAILY_BUDGET_USD`  | ✅     | 1.0                                                    |
+| `LOG_LEVEL`         | ✅     | INFO                                                   |
 
 ## Lệnh Kiểm Tra
 
@@ -110,7 +110,7 @@ Content-Type: application/json
 - `screenshots/dashboard.png` — trang quản lý service trên Railway
 - `screenshots/healthz.png` — kết quả gọi `/healthz` từ trình duyệt hoặc curl
 
-*(Chưa có ảnh — cần chụp sau khi deploy thành công trên dashboard.)*
+_(Chưa có ảnh — cần chụp sau khi deploy thành công trên dashboard.)_
 
 ---
 
