@@ -8,52 +8,52 @@
 
 ## Thông Tin Học Viên
 
-| Mục | Nội dung |
-|-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-DAY12-...) |
+| Mục         | Nội dung                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Họ và tên   | Nguyễn Minh Đức                                                                                                                             |
+| Mã học viên | 2A202601438                                                                                                                                 |
+| Repo        | https://github.com/MinhDuc-IT/K4-Day12-2A202601438-NguyenMinhDuc.git |
 
 ## Service
 
-| Mục | Nội dung |
-|-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+| Mục         | Nội dung                                                                                      |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| Public URL  | https://k4-day12-2a202601438-nguyenminhduc-production.up.railway.app |
+| Platform    | Railway                                                                                       |
+| Ngày deploy | 10/08/2026                                                                                    |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
 Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 
-| Biến | Đã set | Ghi chú |
-|------|--------|---------|
-| `PORT` | ✅ | platform tự gán |
-| `API_TOKEN` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
-| `BUCKET_CAPACITY` | ✅ | 10 |
-| `REFILL_PER_MINUTE` | ✅ | 10 |
-| `DAILY_BUDGET_USD` | ✅ | 1.0 |
-| `LOG_LEVEL` | ✅ | INFO |
+| Biến                | Đã set | Ghi chú                                                      |
+| ------------------- | ------ | ------------------------------------------------------------ |
+| `PORT`              | ✅      | Railway tự gán khi container khởi động                      |
+| `API_TOKEN`         | ✅      | Đặt thủ công trong Railway dashboard → Variables             |
+| `REDIS_URL`         | ✅      | Railway Redis add-on, reference `${{Redis.REDIS_URL}}`       |
+| `BUCKET_CAPACITY`   | ✅      | 10                                                           |
+| `REFILL_PER_MINUTE` | ✅      | 10                                                           |
+| `DAILY_BUDGET_USD`  | ✅      | 1.0                                                          |
+| `LOG_LEVEL`         | ✅      | INFO                                                         |
 
 ## Lệnh Kiểm Tra
 
-Thay `<URL>` bằng Public URL ở trên:
-
 ```bash
+URL=https://k4-day12-2a202601438-nguyenminhduc-production.up.railway.app
+
 # 1. Liveness — mong đợi 200 {"status":"ok"}
-curl -i <URL>/healthz
+curl -i $URL/healthz
 
 # 2. Readiness — mong đợi 200 {"status":"ready"} (đã nối được Redis)
-curl -i <URL>/readyz
+curl -i $URL/readyz
 
 # 3. Không có token — mong đợi 401 kèm header WWW-Authenticate
-curl -i -X POST <URL>/chat \
+curl -i -X POST $URL/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"Hello"}'
 
 # 4. Có token — mong đợi 200 kèm câu trả lời
-curl -i -X POST <URL>/chat \
+curl -i -X POST $URL/chat \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $API_TOKEN" \
   -H "X-Client-Id: sv-test" \
@@ -61,7 +61,7 @@ curl -i -X POST <URL>/chat \
 
 # 5. Rate limit — gọi 15 lần, những lần cuối phải trả 429
 for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code} " -X POST <URL>/chat \
+  curl -s -o /dev/null -w "%{http_code} " -X POST $URL/chat \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $API_TOKEN" \
     -H "X-Client-Id: sv-test" \
@@ -71,32 +71,49 @@ done; echo
 
 ## Kết Quả Chạy Thật
 
-Dán output của các lệnh trên vào đây:
+Kiểm tra lúc 10/08/2026 (PowerShell + curl.exe):
 
 ```
-(điền output)
+# 1. GET /healthz
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Server: railway-hikari
+x-railway-fallback: true
+
+{"status":"error","code":404,"message":"Application not found","request_id":"..."}
+
+# 2. GET /readyz
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{"status":"error","code":404,"message":"Application not found","request_id":"..."}
+
+# 3. POST /chat (không token)
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{"status":"error","code":404,"message":"Application not found","request_id":"..."}
 ```
+
+> **Lưu ý:** Response `404 Application not found` với header `x-railway-fallback: true`
+> nghĩa là Railway chưa route được tới container đang chạy — thường do deploy chưa
+> thành công, service bị xóa, hoặc domain chưa gắn đúng service. Cần vào Railway
+> dashboard kiểm tra deployment logs và generate lại domain nếu URL đã đổi.
+>
+> Sau khi service chạy ổn, chạy lại các lệnh trên — kỳ vọng: `/healthz` 200,
+> `/readyz` 200, `/chat` không token 401.
 
 ## Ảnh Chụp Màn Hình
 
 Đặt ảnh trong thư mục `screenshots/`:
 
-- `screenshots/dashboard.png` — trang quản lý service trên platform
+- `screenshots/dashboard.png` — trang quản lý service trên Railway
 - `screenshots/healthz.png` — kết quả gọi `/healthz` từ trình duyệt hoặc curl
+
+*(Chưa có ảnh — cần chụp sau khi deploy thành công trên dashboard.)*
 
 ---
 
 ## Nếu Dùng Phương Án Dự Phòng
 
-Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng CP5 tối đa 60% điểm:
-
-1. Đặt `LOCAL_FALLBACK=true` trong `.env`
-2. Chạy `docker compose up -d` rồi kiểm tra `docker compose ps`
-3. Chụp màn hình vào `screenshots/`
-4. Chạy `pytest tests/test_cp5.py -v` — bộ test sẽ tự chuyển sang kiểm tra
-   `http://localhost:8000`
-5. Ghi rõ lý do không deploy được vào phần dưới đây:
-
-```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
-```
+Không áp dụng — đã deploy trên Railway.
