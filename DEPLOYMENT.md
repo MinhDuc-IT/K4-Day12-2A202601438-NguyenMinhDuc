@@ -71,49 +71,32 @@ done; echo
 
 ## Kết Quả Chạy Thật
 
-Kiểm tra lúc 10/08/2026 (PowerShell + curl.exe):
+Kiểm tra lúc 10/08/2026 (sau khi sửa startCommand expand PORT):
 
 ```
 # 1. GET /healthz
-HTTP/1.1 404 Not Found
-Content-Type: application/json
-Server: railway-hikari
-x-railway-fallback: true
-
-{"status":"error","code":404,"message":"Application not found","request_id":"..."}
+HTTP/1.1 200 OK
+{"status":"ok","service":"day12-chat-service","version":"1.0.0"}
 
 # 2. GET /readyz
-HTTP/1.1 404 Not Found
-Content-Type: application/json
-
-{"status":"error","code":404,"message":"Application not found","request_id":"..."}
+HTTP/1.1 200 OK
+{"status":"ready","redis":true}
 
 # 3. POST /chat (không token)
-HTTP/1.1 404 Not Found
-Content-Type: application/json
-
-{"status":"error","code":404,"message":"Application not found","request_id":"..."}
+HTTP/1.1 401 Unauthorized
+www-authenticate: Bearer
+{"detail":"invalid or missing bearer token"}
 ```
-
-> **Lưu ý:** Response `404 Application not found` với header `x-railway-fallback: true`
-> nghĩa là Railway chưa route được tới container đang chạy — thường do deploy chưa
-> thành công, service bị xóa, hoặc domain chưa gắn đúng service. Cần vào Railway
-> dashboard kiểm tra deployment logs và generate lại domain nếu URL đã đổi.
->
-> Sau khi service chạy ổn, chạy lại các lệnh trên — kỳ vọng: `/healthz` 200,
-> `/readyz` 200, `/chat` không token 401.
 
 ## Ảnh Chụp Màn Hình
 
 Đặt ảnh trong thư mục `screenshots/`:
 
-- `screenshots/dashboard.png` — trang quản lý service trên Railway
+- `screenshots/dashboard.png` — trang quản lý service trên Railway (Deploy Success)
 - `screenshots/healthz.png` — kết quả gọi `/healthz` từ trình duyệt hoặc curl
-
-_(Chưa có ảnh — cần chụp sau khi deploy thành công trên dashboard.)_
 
 ---
 
 ## Nếu Dùng Phương Án Dự Phòng
 
-Không áp dụng — đã deploy trên Railway.
+Không áp dụng — đã deploy thành công trên Railway.
